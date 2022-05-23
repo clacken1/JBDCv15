@@ -1,0 +1,17 @@
+
+Version 15.0.0.1 :
+		- Solved issue when enabled currency then payment getting traceback.
+
+=> 15.0.0.2 : Add French, Spanish , Arabic and Dutch translation in module also improved an index.
+
+Version 15.0.0.3 : (24-12-21)
+		- Solved amount currency value passing issue.
+		- Allow user to pay multiple times in multi currency.
+
+=> 15.0.0.4 : Improved an index with screen shots.
+
+Version 15.0.0.5 : (04-03-22)
+		- Display other currency in payment lines and also in receipt.
+
+Version 15.0.0.6 : (22-03-22)
+		- Index improved with screen shots.
