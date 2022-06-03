@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_template_sale_by_vendor_report">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br/>
+                    <center><h2>Sale By Vendor Report</h2></center><br/>
+                    <div style="width:100%;margin-bottom:10px;" t-if="env.context.get('from_dt') and env.context.get('to_dt')">
+                        <div style="width:48%;float:left;">
+                            <strong>From: </strong> <t t-esc="env.context.get('from_dt')"/>
+                        </div>
+                        <div style="width:48%;float:right;">
+                            <strong>To: </strong> <t t-esc="env.context.get('to_dt')"/>
+                        </div>
+                        <div style="clear:both;"/>
+                    </div>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th><strong>Vendor</strong></th>
+                                <th><strong>Amount</strong></th>
+                                <th><strong>% of Total</strong></th>
+                                <th><strong>Quantity</strong></th>
+                                <th><strong>Sales</strong></th>
+                                <th><strong>% of Total</strong></th>
+                                <th><strong>Gross Profit</strong></th>
+                                <th><strong>% of Total</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <t t-foreach="locations" t-as="location">
+                                <tr groups="stock.group_stock_multi_locations">
+                                    <td colspan="5"><strong t-esc="location.display_name"/></td>
+                                </tr>
+                                <tr t-foreach="lines.filtered(lambda line: line.location_id.id == location.id or line.location_dest_id.id == location.id)" t-as="line">
+                                    <td groups="stock.group_stock_multi_locations"></td>
+                                    <td><span t-field="line.product_id.default_code"/></td>
+                                    <td><span t-field="line.product_id.name"/></td>
+                                    <td class="text-right"><span t-field="line.qty_done"/></td>
+                                    <td class="text-right"><span t-esc="line.get_inventory_value()"/></td>
+
+                                    <t t-set="total_overall_count" t-value='total_overall_count + 1'/>
+				                	<t t-set="total_overall_quantity" t-value='total_overall_quantity + line.qty_done'/>
+				                	<t t-set="total_overall_value" t-value='total_overall_value + line.get_inventory_value()'/>
+
+				                	<t t-if="line.location_dest_id.usage == 'internal'">
+					                	<t t-set="total_positive_adj_count" t-value='total_positive_adj_count + 1'/>
+					                	<t t-set="total_positive_adj_quantity" t-value='total_positive_adj_quantity + line.qty_done'/>
+					                	<t t-set="total_positive_adj_value" t-value='total_positive_adj_value + line.get_inventory_value()'/>
+				                	</t>
+				                	
+				                	<t t-if="line.location_id.usage == 'internal'">
+					                	<t t-set="total_nagetive_adj_count" t-value='total_nagetive_adj_count + 1'/>
+					                	<t t-set="total_nagetive_adj_quantity" t-value='total_nagetive_adj_quantity + line.qty_done'/>
+					                	<t t-set="total_nagetive_adj_value" t-value='total_nagetive_adj_value + line.get_inventory_value()'/>
+				                	</t>
+                                </tr>
+                            </t> -->
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_sale_by_vendor_report">
+		    <t t-call="web.html_container">
+		        <t t-foreach="docs" t-as="doc">
+		            <t t-call="sale_by_vendor.report_template_sale_by_vendor_report"/>
+		        </t>
+		    </t>
+		</template>
+
+		<record id="action_report_sale_by_vendor_report" model="ir.actions.report">
+            <field name="name">Sale By Vendor Report</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sale_by_vendor.report_sale_by_vendor_report</field>
+            <field name="report_file">sale_by_vendor.report_sale_by_vendor_report</field>
+            <field name="print_report_name">'Sale By Vendor Report'</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+	</data>
+</odoo>
