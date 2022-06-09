@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_by_vendor_wiz_view_form" model="ir.ui.view">
+        <field name="name">sale.by.vendor.wiz.view.form</field>
+        <field name="model">sale.by.vendor.wiz</field>
+        <field name="arch" type="xml">
+            <form>
+                <group attrs="{'invisible': [('state', '=', True)]}">
+                    <group>
+                        <field name="start_dt" required='1'/>
+                        <field name="end_dt" required='1'/>
+                    </group>
+                </group>
+                <group attrs="{'invisible': [('state', '=', False)]}">
+                    <field name="file" filename='filenm' readonly='1'/>
+                    <field name="filenm" invisible='1'/>
+                    <field name="state" invisible='1'/>
+                </group>
+                <footer>
+                    <button attrs="{'invisible': [('state', '=', True)]}" name="print_pdf" string="Print PDF" type="object" class="btn-primary"/>
+                    <button attrs="{'invisible': [('state', '=', True)]}" name="print_xls" string="Print XLS" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_sale_by_vendor_report_wiz" model="ir.actions.act_window">
+        <field name="name">Sale By Vendor Report</field>
+        <field name="res_model">sale.by.vendor.wiz</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_sale_by_vendor_report_wiz"
+        parent="sale.menu_sale_report"
+        action="action_sale_by_vendor_report_wiz"
+    />
+</odoo>
