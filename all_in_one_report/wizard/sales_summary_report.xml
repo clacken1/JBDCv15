@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_sales_summary">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-left container">
+                             <!-- style="border: 1px solid black;" -->
+                            <h4>Sales Analysis</h4><br/>
+                            <h4>Product:</h4><br/>
+                        </div>
+                        <div class="container" style="font-size: 10px;">
+                            <table class="table table-condensed" width="100%">
+                                <tr>
+                                    <th t-if="summary" width="10%" class="text-center">Date</th>
+                                    <th width="10%" class="text-center">Product Code</th>
+                                    <th width="30%" class="text-center">Name</th>
+                                    <th width="10%" class="text-center">Quantity</th>
+                                    <th width="10%" class="text-center">Cost</th>
+                                    <th width="10%" class="text-center">Price</th>
+                                    <th width="10%" class="text-center">Gross Profit</th>
+                                    <th width="10%" class="text-center">GP%</th>
+                                </tr>
+                                <tr t-foreach="summary_data" t-as="l">
+                                    <td t-if="summary"><span t-esc="l['date']"/></td>
+                                    <td><span t-esc="l['code']"/></td>
+                                    <td><span t-esc="l['product']"/></td>
+                                    <td class="text-right"><span t-esc="l['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td class="text-right"><span t-esc="l['cost']" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td class="text-right"><span t-esc="l['price']" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td class="text-right"><span t-esc="l['profit']" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td class="text-right"><span t-esc="l['gp_per']" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                </tr>
+                                <tr>
+                                    <t t-if="summary">
+                                        <td class="text-center" colspan="4">Total</td>
+                                    </t>
+                                    <t t-else="">
+                                        <td class="text-center" colspan="3">Total</td>
+                                    </t>
+                                    <td class="text-right"><t t-esc="total_cost" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td class="text-right"><t t-esc="total_price" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td class="text-right"><t t-esc="total_gross" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr/>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_consignment_summary">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-left container">
+                            <h4>Consignment Report</h4><br/>
+                        </div>
+                        <div class="container" style="font-size: 10px;">
+                            <table class="table table-condensed" width="100%">
+                                <t t-foreach="final_list" t-as="fl">
+                                    <tr>
+                                        <td colspan="5"><b>Owner: <span t-esc="fl['owner_name']"/></b></td>
+                                    </tr>
+                                    <tr>
+                                        <th width="15%" class="text-center">Product Code</th>
+                                        <th width="40%" class="text-center">Name</th>
+                                        <th width="15%" class="text-center">QOH</th>
+                                        <th width="15%" class="text-center">Cost</th>
+                                        <th width="15%" class="text-center">Total Cost</th>
+                                    </tr>
+                                    <tr t-foreach="fl['data_list']" t-as="l">
+                                        <td><span t-esc="l['code']"/></td>
+                                        <td><span t-esc="l['product']"/></td>
+                                        <td class="text-right"><span t-esc="l['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                        <td class="text-right"><span t-esc="l['cost']" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                        <td class="text-right"><span t-esc="l['total_cost']" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td class="text-center" colspan="2">Total</td>
+                                    <td class="text-right"><t t-esc="total_qty" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td class="text-right"><t t-esc="total_cost" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                    <td class="text-right"><t t-esc="total_total_cost" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr/>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
