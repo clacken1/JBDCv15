@@ -33,7 +33,7 @@ class SaleSummaryReport(models.AbstractModel):
                     ('product_id', '=', line.product_id.id)
                 ]   
                 stock_valuation_layer_id = svl_obj.search(domain, order='create_date desc', limit=1)
-                cost = stock_valuation_layer_id.value if stock_valuation_layer_id else line.product_id.standard_price
+                cost = abs(stock_valuation_layer_id.value if stock_valuation_layer_id else line.product_id.standard_price)
 
                 # stock_valuation_layer_ids = svl_obj.search(domain)
                 # product_qty = sum(stock_valuation_layer_ids.mapped('quantity'))
@@ -77,7 +77,7 @@ class SaleSummaryReport(models.AbstractModel):
                     ('product_id', '=', line.product_id.id)
                 ]   
                 stock_valuation_layer_id = svl_obj.search(domain, order='create_date desc', limit=1)
-                cost = stock_valuation_layer_id.value if stock_valuation_layer_id else line.product_id.standard_price
+                cost = abs(stock_valuation_layer_id.value if stock_valuation_layer_id else line.product_id.standard_price)
 
                 # stock_valuation_layer_ids = svl_obj.search(domain)
                 # product_qty = sum(stock_valuation_layer_ids.mapped('quantity'))
@@ -149,8 +149,8 @@ class SaleSummaryReport(models.AbstractModel):
             'currency_precision': 2,
             'doc_ids': docids,
             'doc_model': 'all.sale.summary.wizard',
-            'start_dt' : sale_summary_rec.start_dt,
-            'end_dt' : sale_summary_rec.end_dt,
+            'start_dt' : sale_summary_rec.start_dt.date(),
+            'end_dt' : sale_summary_rec.end_dt.date(),
             'current_dt':datetime.now(),
             'summary_data': summary_data,
             'total_cost': total_cost,
@@ -168,6 +168,14 @@ class ReportConsignmentSummary(models.AbstractModel):
         consignment_rec = self.env['all.consignment.summary.wizard'].browse(docids)       
         domain = [
         ('create_date', '>=', consignment_rec.start_dt), ('create_date', '<=', consignment_rec.end_dt)]
+        if consignment_rec.purchase and not consignment_rec.sales:
+            domain += [('quantity', '>', 0)]
+        if consignment_rec.sales and not consignment_rec.purchase:
+            domain += [('quantity', '<', 0)]
+        if consignment_rec.owner_ids:
+            domain += [('owner_id', 'in', consignment_rec.owner_ids.ids)]
+        if consignment_rec.product_ids:
+            domain += [('product_id', 'in', consignment_rec.product_ids.ids)]
         stock_quant_ids = self.env['stock.quant'].search(domain)
         total_cost = 0.0
         total_total_cost = 0.0
@@ -194,7 +202,7 @@ class ReportConsignmentSummary(models.AbstractModel):
             total_qty += stock_quant_id.quantity
             if stock_quant_id.owner_id.id not in summary_data:
                 summary_data[stock_quant_id.owner_id.id] = {
-                    'owner_name': stock_quant_id.owner_id.name,
+                    'owner_name': stock_quant_id.owner_id.name or 'Undefined',
                     'data_list' : [{
                         'code': stock_quant_id.product_id.default_code,
                         'product': stock_quant_id.product_id.display_name,

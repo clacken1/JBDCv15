@@ -42,7 +42,10 @@ class AllConsignmentSummary(models.TransientModel):
 
     start_dt = fields.Datetime('Start Date', required=True)
     end_dt = fields.Datetime('End Date', required=True)
-
+    purchase = fields.Boolean('Purchase?')
+    sales = fields.Boolean('Sales?')
+    owner_ids = fields.Many2many('res.partner', string="Owner")
+    product_ids = fields.Many2many('product.product', string="Product")
 
     def consignment_summary_generate_report(self):
         if(self.start_dt <= self.end_dt):
