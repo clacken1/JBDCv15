@@ -66,6 +66,14 @@
 					<field name="start_dt"/>
 					<field name="end_dt"/>
 				</group>
+				<group col="4">
+					<field name="purchase"/>
+					<field name="sales"/>
+				</group>
+				<group col="4">
+					<field name="owner_ids" widget="many2many_tags"/>
+					<field name="product_ids" widget="many2many_tags"/>
+				</group>
 				<footer>
 					<button name="consignment_summary_generate_report" string="Print" type="object" class="btn-primary"/>
 					<button string="Cancel" class="btn-default" special="cancel" />
