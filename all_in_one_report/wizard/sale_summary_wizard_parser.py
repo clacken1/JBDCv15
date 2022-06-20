@@ -183,12 +183,12 @@ class ReportConsignmentSummary(models.AbstractModel):
         summary_data = {}
         svl_obj = self.env['stock.valuation.layer']
         for stock_quant_id in stock_quant_ids:
-            domain = [
-                ('create_date', '<', stock_quant_id.create_date.date()),
-                ('product_id', '=', stock_quant_id.product_id.id)
-            ]   
-            stock_valuation_layer_id = svl_obj.search(domain, order='create_date desc', limit=1)
-            cost = stock_valuation_layer_id.value if stock_valuation_layer_id else stock_quant_id.product_id.standard_price
+            # domain = [
+            #     ('create_date', '<', stock_quant_id.create_date.date()),
+            #     ('product_id', '=', stock_quant_id.product_id.id)
+            # ]   
+            # stock_valuation_layer_id = svl_obj.search(domain, order='create_date desc', limit=1)
+            # cost = stock_valuation_layer_id.value if stock_valuation_layer_id else stock_quant_id.product_id.standard_price
 
             # stock_valuation_layer_ids = svl_obj.search(domain)
             # product_qty = sum(stock_valuation_layer_ids.mapped('quantity'))
@@ -197,27 +197,34 @@ class ReportConsignmentSummary(models.AbstractModel):
             #     cost = product_value / product_qty
             # else:
             #     cost = line.product_id.standard_price
+            qty_available = stock_quant_id.product_id.qty_available
+            # qty_available = stock_quant_id.quantity
+            cost = stock_quant_id.product_id.standard_price
             total_cost += cost
-            total_total_cost += cost * stock_quant_id.quantity
-            total_qty += stock_quant_id.quantity
+            total_total_cost += cost * qty_available
+            total_qty += qty_available
+
             if stock_quant_id.owner_id.id not in summary_data:
                 summary_data[stock_quant_id.owner_id.id] = {
                     'owner_name': stock_quant_id.owner_id.name or 'Undefined',
                     'data_list' : [{
                         'code': stock_quant_id.product_id.default_code,
                         'product': stock_quant_id.product_id.display_name,
-                        'quantity': stock_quant_id.quantity,
+                        'quantity': qty_available,
                         'cost': cost,
-                        'total_cost': cost * stock_quant_id.quantity,
+                        'total_cost': cost * qty_available,
+                        # 'quantity': stock_quant_id.quantity,
+                        # 'cost': cost,
+                        # 'total_cost': cost * stock_quant_id.quantity,
                     }]
                 }
             else:
                 summary_data[stock_quant_id.owner_id.id]['data_list'].append({
                     'code': stock_quant_id.product_id.default_code,
                     'product': stock_quant_id.product_id.display_name,
-                    'quantity': stock_quant_id.quantity,
+                    'quantity': qty_available,
                     'cost': cost,
-                    'total_cost': cost * stock_quant_id.quantity,
+                    'total_cost': cost * qty_available,
                 })
         print("==summary_data==", summary_data)
         final_list = []
