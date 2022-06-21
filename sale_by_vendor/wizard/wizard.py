@@ -131,21 +131,21 @@ class SaleByVendorWizard(models.Model):
             line_vals = [
                 value.get('vendor'),
                 len(set(value.get('amount'))),
-                '{:.2f}'.format(amount_pr),  # round(amount_pr),
+                '{:,.2f}'.format(amount_pr),  # round(amount_pr),
                 value.get('quantity'),
-                '{:.2f}'.format(value.get('sales')),  # value.get('sales'),
-                '{:.2f}'.format(sales_pr),  # round(sales_pr),
-                '{:.2f}'.format(gross_profit),
-                '{:.2f}'.format(gross_profit_pr),  # round(gross_profit_pr),
+                '{:,.2f}'.format(value.get('sales')),  # value.get('sales'),
+                '{:,.2f}'.format(sales_pr),  # round(sales_pr),
+                '{:,.2f}'.format(gross_profit),
+                '{:,.2f}'.format(gross_profit_pr),  # round(gross_profit_pr),
             ]
             final_lines.append(line_vals)
         return {
             'lines': final_lines,
             'total_amount': total_amount,
             'total_qty': total_qty,
-            'total_sales': '{:.2f}'.format(total_sales),
-            'total_cost': '{:.2f}'.format(total_cost),
-            'total_gross_profit': '{:.2f}'.format(total_gross_profit),
+            'total_sales': '{:,.2f}'.format(total_sales),
+            'total_cost': '{:,.2f}'.format(total_cost),
+            'total_gross_profit': '{:,.2f}'.format(total_gross_profit),
         }
 
     def print_pdf(self):
