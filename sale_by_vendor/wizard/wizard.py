@@ -72,7 +72,7 @@ class SaleByVendorWizard(models.Model):
                         }
 
         for pos_order in pos_orders:
-            for line in pos_orders.lines:
+            for line in pos_order.lines:
                 if line.product_id.x_studio_vendor_number:
                     if line.product_id.x_studio_vendor_number in data_dict:
                         data_dict[line.product_id.x_studio_vendor_number].get('amount').append(line.product_id.id)
