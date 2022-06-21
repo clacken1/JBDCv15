@@ -30,34 +30,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <t t-foreach="locations" t-as="location">
-                                <tr groups="stock.group_stock_multi_locations">
-                                    <td colspan="5"><strong t-esc="location.display_name"/></td>
+                            <t t-foreach="env.context.get('report_data').get('lines')" t-as="line">
+                                <tr>
+                                    <td><t t-esc="line[0]"/></td>
+                                    <td><t t-esc="line[1]"/></td>
+                                    <td><t t-esc="line[2]"/>%</td>
+                                    <td><t t-esc="line[3]"/></td>
+                                    <td><t t-esc="line[4]"/></td>
+                                    <td><t t-esc="line[5]"/>%</td>
+                                    <td><t t-esc="line[6]"/></td>
+                                    <td><t t-esc="line[7]"/>%</td>
                                 </tr>
-                                <tr t-foreach="lines.filtered(lambda line: line.location_id.id == location.id or line.location_dest_id.id == location.id)" t-as="line">
-                                    <td groups="stock.group_stock_multi_locations"></td>
-                                    <td><span t-field="line.product_id.default_code"/></td>
-                                    <td><span t-field="line.product_id.name"/></td>
-                                    <td class="text-right"><span t-field="line.qty_done"/></td>
-                                    <td class="text-right"><span t-esc="line.get_inventory_value()"/></td>
-
-                                    <t t-set="total_overall_count" t-value='total_overall_count + 1'/>
-				                	<t t-set="total_overall_quantity" t-value='total_overall_quantity + line.qty_done'/>
-				                	<t t-set="total_overall_value" t-value='total_overall_value + line.get_inventory_value()'/>
-
-				                	<t t-if="line.location_dest_id.usage == 'internal'">
-					                	<t t-set="total_positive_adj_count" t-value='total_positive_adj_count + 1'/>
-					                	<t t-set="total_positive_adj_quantity" t-value='total_positive_adj_quantity + line.qty_done'/>
-					                	<t t-set="total_positive_adj_value" t-value='total_positive_adj_value + line.get_inventory_value()'/>
-				                	</t>
-				                	
-				                	<t t-if="line.location_id.usage == 'internal'">
-					                	<t t-set="total_nagetive_adj_count" t-value='total_nagetive_adj_count + 1'/>
-					                	<t t-set="total_nagetive_adj_quantity" t-value='total_nagetive_adj_quantity + line.qty_done'/>
-					                	<t t-set="total_nagetive_adj_value" t-value='total_nagetive_adj_value + line.get_inventory_value()'/>
-				                	</t>
-                                </tr>
-                            </t> -->
+                            </t>
+                            <tr>
+                                <td>Grand Totals:</td>
+                                <td><t t-esc="env.context.get('report_data').get('total_amount')"/> items</td>
+                                <td></td>
+                                <td><t t-esc="env.context.get('report_data').get('total_qty')"/></td>
+                                <td><t t-esc="env.context.get('report_data').get('total_sales')"/></td>
+                                <td></td>
+                                <td><t t-esc="env.context.get('report_data').get('total_gross_profit')"/></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

@@ -38,6 +38,116 @@ class SaleByVendorWizard(models.Model):
             ('state', 'in', ('sale', 'done')),
         ])
 
+        data_dict = {}
+
+        for sale_order in sales_orders:
+            for line in sale_order.order_line:
+                if line.product_id.x_studio_vendor_number:
+                    if line.product_id.x_studio_vendor_number in data_dict:
+                        data_dict[line.product_id.x_studio_vendor_number].get('amount').append(line.product_id.id)
+
+                        data_dict[line.product_id.x_studio_vendor_number] = {
+                            'vendor': line.product_id.x_studio_vendor_number,
+                            # 'amount': data_dict[line.product_id.x_studio_vendor_number].get('amount').append(line.product_id.id),
+                            'amount': data_dict[line.product_id.x_studio_vendor_number].get('amount'),
+                            'amount_pr': '',  # 2/7*100
+                            'quantity': data_dict[line.product_id.x_studio_vendor_number].get('quantity', 0) + line.product_uom_qty,
+                            'sales': data_dict[line.product_id.x_studio_vendor_number].get('sales', 0) + line.price_subtotal,
+                            'sales_pr': '',  # 50000/325000*100
+                            'gross_profit': '',
+                            'gross_profit_pr': '',
+                            'cost': data_dict[line.product_id.x_studio_vendor_number].get('cost', 0) + (line.product_id.standard_price * line.product_uom_qty),
+                        }
+                    else:
+                        data_dict[line.product_id.x_studio_vendor_number] = {
+                            'vendor': line.product_id.x_studio_vendor_number,
+                            'amount': [line.product_id.id],
+                            'amount_pr': '',  # 2/7*100
+                            'quantity': line.product_uom_qty,
+                            'sales': line.price_subtotal,
+                            'sales_pr': '',  # 50000/325000*100
+                            'gross_profit': '',
+                            'gross_profit_pr': '',
+                            'cost': line.product_id.standard_price * line.product_uom_qty,
+                        }
+
+        for pos_order in pos_orders:
+            for line in pos_orders.lines:
+                if line.product_id.x_studio_vendor_number:
+                    if line.product_id.x_studio_vendor_number in data_dict:
+                        data_dict[line.product_id.x_studio_vendor_number].get('amount').append(line.product_id.id)
+
+                        data_dict[line.product_id.x_studio_vendor_number] = {
+                            'vendor': line.product_id.x_studio_vendor_number,
+                            # 'amount': data_dict[line.product_id.x_studio_vendor_number].get('amount').append(line.product_id.id),
+                            'amount': data_dict[line.product_id.x_studio_vendor_number].get('amount'),
+                            'amount_pr': '',  # 2/7*100
+                            'quantity': data_dict[line.product_id.x_studio_vendor_number].get('quantity', 0) + line.qty,
+                            'sales': data_dict[line.product_id.x_studio_vendor_number].get('sales', 0) + line.price_subtotal,
+                            'sales_pr': '',  # 50000/325000*100
+                            'gross_profit': '',
+                            'gross_profit_pr': '',
+                            'cost': data_dict[line.product_id.x_studio_vendor_number].get('cost', 0) + (line.product_id.standard_price * line.qty),
+                        }
+                    else:
+                        data_dict[line.product_id.x_studio_vendor_number] = {
+                            'vendor': line.product_id.x_studio_vendor_number,
+                            'amount': [line.product_id.id],
+                            'amount_pr': '',  # 2/7*100
+                            'quantity': line.qty,
+                            'sales': line.price_subtotal,
+                            'sales_pr': '',  # 50000/325000*100
+                            'gross_profit': '',
+                            'gross_profit_pr': '',
+                            'cost': line.product_id.standard_price * line.qty,
+                        }
+
+        final_lines = []
+
+        total_amount = 0
+        total_qty = 0
+        total_sales = 0
+        total_cost = 0
+        total_gross_profit = 0
+
+        for key, value in data_dict.items():
+            total_amount += len(set(value.get('amount')))
+            total_qty += value.get('quantity')
+            total_sales += value.get('sales')
+            total_cost += value.get('cost')
+
+        if total_amount == 0:
+            total_amount = 1
+        if total_sales == 0:
+            total_sales = 1
+
+        for key, value in data_dict.items():
+            amount_pr = len(set(value.get('amount'))) / total_amount * 100
+            sales_pr = value.get('sales') / total_sales * 100
+            gross_profit = value.get('sales') - value.get('cost')
+            total_gross_profit += gross_profit
+            gross_profit_pr = gross_profit / total_cost * 100
+
+            line_vals = [
+                value.get('vendor'),
+                len(set(value.get('amount'))),
+                round(amount_pr),
+                value.get('quantity'),
+                value.get('sales'),
+                round(sales_pr),
+                gross_profit,
+                round(gross_profit_pr),
+            ]
+            final_lines.append(line_vals)
+        return {
+            'lines': final_lines,
+            'total_amount': total_amount,
+            'total_qty': total_qty,
+            'total_sales': total_sales,
+            'total_cost': total_cost,
+            'total_gross_profit': total_gross_profit,
+        }
+
     def print_pdf(self):
         data = self.get_data('pdf')
 
@@ -102,20 +212,16 @@ class SaleByVendorWizard(models.Model):
         worksheet.write(row, 7, '% of Total', xlwt.easyxf('font:bold on'))
         row += 1
 
-        total_1 = 0
-        total_3 = 0
-        total_4 = 0
-        total_6 = 0
-
-        worksheet.write(row, 0, '3')
-        worksheet.write(row, 1, str(2))
-        worksheet.write(row, 2, '29%')
-        worksheet.write(row, 3, '10')
-        worksheet.write(row, 4, '50000')
-        worksheet.write(row, 5, '15%')
-        worksheet.write(row, 6, '30000')
-        worksheet.write(row, 7, '12%')
-        row += 1
+        for line in data.get('lines'):
+            worksheet.write(row, 0, line[0])
+            worksheet.write(row, 1, line[1])
+            worksheet.write(row, 2, str(line[2]) + '%')
+            worksheet.write(row, 3, line[3])
+            worksheet.write(row, 4, line[4])
+            worksheet.write(row, 5, str(line[5]) + '%')
+            worksheet.write(row, 6, line[6])
+            worksheet.write(row, 7, str(line[7]) + '%')
+            row += 1
 
         worksheet.write(row, 0, '', xlwt.easyxf('font:bold on'))
         worksheet.write(row, 1, '', xlwt.easyxf('font:bold on'))
@@ -128,12 +234,12 @@ class SaleByVendorWizard(models.Model):
         row += 1
 
         worksheet.write(row, 0, 'Grand Totals', xlwt.easyxf('font:bold on'))
-        worksheet.write(row, 1, str(total_1), xlwt.easyxf('font:bold on'))
+        worksheet.write(row, 1, str(data.get('total_amount')), xlwt.easyxf('font:bold on'))
         worksheet.write(row, 2, '', xlwt.easyxf('font:bold on'))
-        worksheet.write(row, 3, str(total_3), xlwt.easyxf('font:bold on'))
-        worksheet.write(row, 4, str(total_4), xlwt.easyxf('font:bold on'))
+        worksheet.write(row, 3, str(data.get('total_qty')), xlwt.easyxf('font:bold on'))
+        worksheet.write(row, 4, str(data.get('total_sales')), xlwt.easyxf('font:bold on'))
         worksheet.write(row, 5, '', xlwt.easyxf('font:bold on'))
-        worksheet.write(row, 6, str(total_6), xlwt.easyxf('font:bold on'))
+        worksheet.write(row, 6, str(data.get('total_gross_profit')), xlwt.easyxf('font:bold on'))
         worksheet.write(row, 7, '', xlwt.easyxf('font:bold on'))
         row += 1
 
