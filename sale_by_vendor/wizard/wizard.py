@@ -143,9 +143,9 @@ class SaleByVendorWizard(models.Model):
             'lines': final_lines,
             'total_amount': total_amount,
             'total_qty': total_qty,
-            'total_sales': total_sales,
-            'total_cost': total_cost,
-            'total_gross_profit': total_gross_profit,
+            'total_sales': '{:.2f}'.format(total_sales),
+            'total_cost': '{:.2f}'.format(total_cost),
+            'total_gross_profit': '{:.2f}'.format(total_gross_profit),
         }
 
     def print_pdf(self):
