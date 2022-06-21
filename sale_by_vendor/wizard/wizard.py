@@ -131,12 +131,12 @@ class SaleByVendorWizard(models.Model):
             line_vals = [
                 value.get('vendor'),
                 len(set(value.get('amount'))),
-                round(amount_pr),
+                '{:.2f}'.format(amount_pr),  # round(amount_pr),
                 value.get('quantity'),
-                value.get('sales'),
-                round(sales_pr),
-                gross_profit,
-                round(gross_profit_pr),
+                '{:.2f}'.format(value.get('sales')),  # value.get('sales'),
+                '{:.2f}'.format(sales_pr),  # round(sales_pr),
+                '{:.2f}'.format(gross_profit),
+                '{:.2f}'.format(gross_profit_pr),  # round(gross_profit_pr),
             ]
             final_lines.append(line_vals)
         return {
