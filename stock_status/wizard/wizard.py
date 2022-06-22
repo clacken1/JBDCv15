@@ -30,16 +30,16 @@ class StockStatusWizard(models.Model):
         return datetm_usertz.strftime("%Y-%m-%d %H:%M:%S")
 
     def get_data(self, report_type):
-        warehouse_id = self.env['stock.warehouse'].sudo().search([('company_id', '=', self.env.company.id)], limit=1).id
+        # warehouse_id = self.env['stock.warehouse'].sudo().search([('company_id', '=', self.env.company.id)], limit=1).id
         if not self.all_product:
-            products = self.env['product.product'].with_context({"warehouse": warehouse_id, "from_date": self.start_dt, "to_date": self.end_dt}).search([('id', 'in', self.product_ids.ids), ('detailed_type', '=', 'product')])
+            products = self.env['product.product'].with_context({"from_date": self.start_dt, "to_date": self.end_dt}).search([('id', 'in', self.product_ids.ids), ('detailed_type', '=', 'product')])
         else:
-            products = self.env['product.product'].with_context({"warehouse": warehouse_id, "from_date": self.start_dt, "to_date": self.end_dt}).search([('detailed_type', '=', 'product')])
+            products = self.env['product.product'].with_context({"from_date": self.start_dt, "to_date": self.end_dt}).search([('detailed_type', '=', 'product')])
 
         data_dict = {}
 
-        for product in products.with_context({"warehouse": warehouse_id, "from_date": self.start_dt, "to_date": self.end_dt}):
-            product = product.with_context({"warehouse": warehouse_id, "from_date": self.start_dt, "to_date": self.end_dt})
+        for product in products.with_context({"from_date": self.start_dt, "to_date": self.end_dt}):
+            product = product.with_context({"from_date": self.start_dt, "to_date": self.end_dt})
             dict_key = False
 
             if product.x_studio_vendor_number and product.x_studio_listed_vendor:
