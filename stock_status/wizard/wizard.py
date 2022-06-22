@@ -206,6 +206,7 @@ class StockStatusWizard(models.Model):
                             grand_total_qty_on_hand += line[9]
                             grand_total_qty_available += line[10]
 
+                if counter > 0:
                     worksheet.write(row, 0, '')
                     worksheet.write(row, 1, '')
                     worksheet.write(row, 2, 'Total for Vendor', xlwt.easyxf('font:bold on'))
@@ -246,14 +247,15 @@ class StockStatusWizard(models.Model):
                         grand_total_qty_on_hand += line[9]
                         grand_total_qty_available += line[10]
 
-        worksheet.write(row, 0, '')
-        worksheet.write(row, 1, '')
-        worksheet.write(row, 2, 'Total', xlwt.easyxf('font:bold on'))
-        worksheet.write(row, 3, '')
-        worksheet.write(row, 4, '')
-        worksheet.write(row, 5, '{:,.2f}'.format(total_qty_on_hand1), xlwt.easyxf('font:bold on'))
-        worksheet.write(row, 6, '{:,.2f}'.format(total_qty_available1), xlwt.easyxf('font:bold on'))
-        row += 1
+        if counter1 > 0:
+            worksheet.write(row, 0, '')
+            worksheet.write(row, 1, '')
+            worksheet.write(row, 2, 'Total', xlwt.easyxf('font:bold on'))
+            worksheet.write(row, 3, '')
+            worksheet.write(row, 4, '')
+            worksheet.write(row, 5, '{:,.2f}'.format(total_qty_on_hand1), xlwt.easyxf('font:bold on'))
+            worksheet.write(row, 6, '{:,.2f}'.format(total_qty_available1), xlwt.easyxf('font:bold on'))
+            row += 1
 
         worksheet.write(row, 0, '')
         worksheet.write(row, 1, '')
