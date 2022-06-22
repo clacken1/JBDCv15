@@ -32,9 +32,9 @@ class StockStatusWizard(models.Model):
     def get_data(self, report_type):
         # warehouse_id = self.env['stock.warehouse'].sudo().search([('company_id', '=', self.env.company.id)], limit=1).id
         if not self.all_product:
-            products = self.env['product.product'].with_context({"from_date": self.start_dt, "to_date": self.end_dt}).search([('id', 'in', self.product_ids.ids), ('detailed_type', '=', 'product')])
+            products = self.env['product.product'].with_context({"from_date": self.start_dt, "to_date": self.end_dt}).search([('id', 'in', self.product_ids.ids), ('detailed_type', '=', 'product')], limit=1300)
         else:
-            products = self.env['product.product'].with_context({"from_date": self.start_dt, "to_date": self.end_dt}).search([('detailed_type', '=', 'product')])
+            products = self.env['product.product'].with_context({"from_date": self.start_dt, "to_date": self.end_dt}).search([('detailed_type', '=', 'product')], limit=1300)
 
         data_dict = {}
 
@@ -179,8 +179,11 @@ class StockStatusWizard(models.Model):
                         counter += 1
 
                 if counter > 0:
+                    nm = ''
+                    if len(key.split('_', 1)) > 1:
+                        nm = key.split('_', 1)[1]
                     worksheet.write_merge(row, row, 0, 1, 'Vendor-' + key.split('_', 1)[0], xlwt.easyxf('font:bold on'))
-                    worksheet.write_merge(row, row, 2, 3, 'Name:' + key.split('_', 1)[1], xlwt.easyxf('font:bold on'))
+                    worksheet.write_merge(row, row, 2, 3, 'Name:' + nm, xlwt.easyxf('font:bold on'))
                     worksheet.write(row, 4, '', xlwt.easyxf('font:bold on'))
                     worksheet.write(row, 5, '', xlwt.easyxf('font:bold on'))
                     worksheet.write(row, 6, '', xlwt.easyxf('font:bold on'))

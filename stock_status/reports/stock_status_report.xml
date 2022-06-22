@@ -43,7 +43,7 @@
 
                                     <tr t-if="counter > 0">
                                         <td colspan="2"><strong>Vendor- <t t-esc="key.split('_', 1)[0]"/></strong></td>
-                                        <td colspan="2"><strong>Name: <t t-esc="key.split('_', 1)[1]"/></strong></td>
+                                        <td colspan="2"><strong>Name: <t t-if="len(key.split('_', 1)) > 1" t-esc="key.split('_', 1)[1]"/></strong></td>
                                         <td colspan="3"></td>
                                     </tr>
 
