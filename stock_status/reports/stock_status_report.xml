@@ -70,7 +70,7 @@
     				                	</t>
                                     </t>
 
-                                    <tr>
+                                    <tr t-if="counter > 0">
                                         <td></td>
                                         <td></td>
                                         <td><strong>Total for Vendor</strong></td>
@@ -123,7 +123,7 @@
                                 </t>
                             </t>
 
-                            <tr>
+                            <tr t-if="counter1 > 0">
                                 <td></td>
                                 <td></td>
                                 <td><strong>Total</strong></td>
