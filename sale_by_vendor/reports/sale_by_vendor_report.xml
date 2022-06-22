@@ -73,7 +73,6 @@
             <field name="report_name">sale_by_vendor.report_sale_by_vendor_report</field>
             <field name="report_file">sale_by_vendor.report_sale_by_vendor_report</field>
             <field name="print_report_name">'Sale By Vendor Report'</field>
-            <field name="binding_model_id" ref="sale.model_sale_order"/>
             <field name="binding_type">report</field>
         </record>
 	</data>

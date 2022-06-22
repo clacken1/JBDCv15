@@ -10,6 +10,8 @@
                     <group>
                         <field name="start_dt" required='1'/>
                         <field name="end_dt" required='1'/>
+                        <field name="all_product"/>
+                        <field name="product_ids" widget="many2many_tags" attrs="{'invisible': [('all_product', '!=', False)], 'required': [('all_product', '=', False)]}"/>
                     </group>
                 </group>
                 <group attrs="{'invisible': [('state', '=', False)]}">
