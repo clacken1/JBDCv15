@@ -8,7 +8,8 @@ class BankStatement(models.Model):
 
     @api.onchange('journal_id', 'date_from', 'date_to')
     def _get_lines(self):
-        self.account_id = self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id
+        # self.account_id = self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id
+        self.account_id = self.journal_id.default_account_id.id
         self.currency_id = self.journal_id.currency_id or self.journal_id.company_id.currency_id or \
             self.env.user.company_id.currency_id
         domain = [('account_id', '=', self.account_id.id),
@@ -56,5 +57,4 @@ class BankStatement(models.Model):
         'Amounts not Reflected in Bank', readonly=True, compute='_compute_amount')
     current_update = fields.Monetary('Balance of entries updated now')
     currency_id = fields.Many2one('res.currency', string='Currency')
-    company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env['res.company']._company_default_get('bank.statement'))
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
