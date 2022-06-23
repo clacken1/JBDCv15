@@ -6,10 +6,10 @@ class BankStatement(models.Model):
     _name = 'bank.statement'
     _description = 'Bank Statement'
 
-    @api.onchange('journal_id', 'date_from', 'date_to')
+    @api.onchange('journal_id', 'date_from', 'date_to', 'account_id')
     def _get_lines(self):
         # self.account_id = self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id
-        self.account_id = self.journal_id.default_account_id.id
+        # self.account_id = self.journal_id.default_account_id.id
         self.currency_id = self.journal_id.currency_id or self.journal_id.company_id.currency_id or \
             self.env.user.company_id.currency_id
         domain = [('account_id', '=', self.account_id.id),
