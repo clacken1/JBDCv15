@@ -1,131 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-		<template id="report_template_inventory_variance_report">
+		<template id="report_template_bank_reconciliation_report">
             <t t-call="web.external_layout">
                 <div class="page">
-                	<t t-set="total_overall_count" t-value='0'/>
-                	<t t-set="total_overall_quantity" t-value='0'/>
-                	<t t-set="total_overall_value" t-value='0'/>
-
-                	<t t-set="total_positive_adj_count" t-value='0'/>
-                	<t t-set="total_positive_adj_quantity" t-value='0'/>
-                	<t t-set="total_positive_adj_value" t-value='0'/>
-                	
-                	<t t-set="total_nagetive_adj_count" t-value='0'/>
-                	<t t-set="total_nagetive_adj_quantity" t-value='0'/>
-                	<t t-set="total_nagetive_adj_value" t-value='0'/>
                     <br/>
-                    <center><h2>Inventory Variance Report</h2></center><br/>
-
-                    <t t-set="lines" t-value="doc.get_history_lines()"/>
-                    <t t-set="locations" t-value="doc.get_locations()"/>
-
-                    <div>
-                    	<b>Location: </b> <t t-esc="doc.location_id.display_name"/><br/>
-                    	<b>Adjustment date:</b> <span t-field="doc.inventory_date"/><br/>
-                    	<b>Inventory Reference:</b> Inventory of <t t-esc="doc.product_id.name"/> for location <t t-esc="doc.location_id.display_name"/>
-                    </div>
-                    <br/>
+                    <h4 style='text-align:left;'>BANK RECONCILIATION FOR THE PERIOD: <strong><span t-field="doc.date_from"/> - <span t-field="doc.date_to"/></strong></h4><br/>
 
                     <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th groups="stock.group_stock_multi_locations"><strong>Location</strong></th>
-                                <th><strong>Internal Reference</strong></th>
-                                <th><strong>Product Name</strong></th>
-                                <th class="text-right"><strong>Quantity</strong></th>
-                                <th class="text-right"><strong>Value</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="locations" t-as="location">
-                                <tr groups="stock.group_stock_multi_locations">
-                                    <td colspan="5"><strong t-esc="location.display_name"/></td>
-                                </tr>
-                                <t t-foreach="lines.filtered(lambda line: line.location_id.id == location.id or line.location_dest_id.id == location.id)" t-as="line">
-                                    <t t-if="line.qty_done != 0">
-                                        <tr>
-                                            <td groups="stock.group_stock_multi_locations"></td>
-                                            <td><span t-field="line.product_id.default_code"/></td>
-                                            <td><span t-field="line.product_id.name"/></td>
-                                            <td class="text-right"><span t-field="line.qty_done"/></td>
-                                            <td class="text-right"><span t-esc="line.get_inventory_value()"/></td>
+                        <tr>
+                            <td><strong>Beginning GL Balance</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Add Payments:</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Less Charges:</strong></td>
+                            <td></td>
+                        </tr>
 
-                                            <t t-set="total_overall_count" t-value='total_overall_count + 1'/>
-        				                	<t t-set="total_overall_quantity" t-value='total_overall_quantity + line.qty_done'/>
-        				                	<t t-set="total_overall_value" t-value='total_overall_value + line.get_inventory_value()'/>
+                        <tr rowspan="2">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                        </tr>
 
-        				                	<t t-if="line.location_dest_id.usage == 'internal'">
-        					                	<t t-set="total_positive_adj_count" t-value='total_positive_adj_count + 1'/>
-        					                	<t t-set="total_positive_adj_quantity" t-value='total_positive_adj_quantity + line.qty_done'/>
-        					                	<t t-set="total_positive_adj_value" t-value='total_positive_adj_value + line.get_inventory_value()'/>
-        				                	</t>
-        				                	
-        				                	<t t-if="line.location_id.usage == 'internal'">
-        					                	<t t-set="total_nagetive_adj_count" t-value='total_nagetive_adj_count + 1'/>
-        					                	<t t-set="total_nagetive_adj_quantity" t-value='total_nagetive_adj_quantity + line.qty_done'/>
-        					                	<t t-set="total_nagetive_adj_value" t-value='total_nagetive_adj_value + line.get_inventory_value()'/>
-        				                	</t>
-                                        </tr>
-                                    </t>
-                                </t>
-                            </t>
-                        </tbody>
+                        <tr>
+                            <td><strong>Ending GL Balance</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ending Statement Balance</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Less payments not debited by bank</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Add payments not credited by bank</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Unreconciled Difference</strong></td>
+                            <td></td>
+                        </tr>
+
+                        <tr rowspan="2">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Outstanding Receipts:</strong></td>
+                            <td></td>
+                        </tr>
+
+                        <tr rowspan="2">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Outstanding Payments:</strong></td>
+                            <td></td>
+                        </tr>
                     </table>
-
-                    <br/><br/>
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th><strong>Total</strong></th>
-                                <th class="text-right"><strong>Count</strong></th>
-                                <th class="text-right"><strong>Quantity</strong></th>
-                                <th class="text-right"><strong>Value</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Overall</strong></td>
-                                <td class="text-right"><span t-esc="total_overall_count"/></td>
-                                <td class="text-right"><span t-esc="total_overall_quantity"/></td>
-                                <td class="text-right"><span t-esc="total_overall_value"/></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Upward Adjustments</strong></td>
-                                <td class="text-right"><span t-esc="total_positive_adj_count"/></td>
-                                <td class="text-right"><span t-esc="total_positive_adj_quantity"/></td>
-                                <td class="text-right"><span t-esc="total_positive_adj_value"/></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Downward Adjustments</strong></td>
-                                <td class="text-right"><span t-esc="total_nagetive_adj_count"/></td>
-                                <td class="text-right"><span t-esc="total_nagetive_adj_quantity"/></td>
-                                <td class="text-right"><span t-esc="total_nagetive_adj_value"/></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
                 </div>
             </t>
         </template>
 
-        <template id="report_inventory_variance_report">
+        <template id="report_bank_reconciliation_report">
 		    <t t-call="web.html_container">
 		        <t t-foreach="docs" t-as="doc">
-		            <t t-call="inventory_variance_report.report_template_inventory_variance_report"/>
+		            <t t-call="bank_reconciliation.report_template_bank_reconciliation_report"/>
 		        </t>
 		    </t>
 		</template>
 
-		<record id="action_report_inventory_variance_report" model="ir.actions.report">
-            <field name="name">Inventory Variance Report</field>
-            <field name="model">stock.quant</field>
+		<record id="action_report_bank_reconciliation_report" model="ir.actions.report">
+            <field name="name">Bank Reconciliation Report</field>
+            <field name="model">bank.statement</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">inventory_variance_report.report_inventory_variance_report</field>
-            <field name="report_file">inventory_variance_report.report_inventory_variance_report</field>
-            <field name="print_report_name">'Inventory Variance Report'</field>
-            <field name="binding_model_id" ref="stock.model_stock_quant"/>
+            <field name="report_name">bank_reconciliation.report_bank_reconciliation_report</field>
+            <field name="report_file">bank_reconciliation.report_bank_reconciliation_report</field>
+            <field name="print_report_name">'Bank Reconciliation Report'</field>
+            <field name="binding_model_id" ref="bank_reconciliation.model_bank_statement"/>
             <field name="binding_type">report</field>
         </record>
 	</data>
