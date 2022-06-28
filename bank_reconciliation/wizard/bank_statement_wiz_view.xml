@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="bank_statement_wiz_tree" model="ir.ui.view">
+        <field name="name">bank.statement.reconciliation.view.tree</field>
+        <field name="model">bank.statement</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="journal_id"/>
+                <field name="account_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="gl_balance"/>
+                <field name="balance_difference"/>
+                <field name="bank_balance"/>
+            </tree>
+        </field>
+    </record>
 
     <record id="bank_statement_wiz" model="ir.ui.view">
         <field name="name">bank.statement.reconciliation</field>
@@ -37,7 +52,7 @@
                 <group class="oe_subtotal_footer oe_right">
                     <field name="gl_balance"/>
                     <field name="balance_difference"/>
-                    <field name="bank_balance"/>
+                    <field name="bank_balance" readonly='0'/>
                 </group>
             </form>
         </field>
@@ -52,10 +67,17 @@
         <field name="target">new</field>
     </record>
 
+    <record id="action_bank_statement_wiz_open" model="ir.actions.act_window">
+        <field name="name">Bank Statement Reconciliation</field>
+        <field name="res_model">bank.statement</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
     <menuitem
         id="menu_action_bank_reconciliation"
         parent="account.menu_finance_entries_actions"
-        action="action_bank_statement_wiz"
+        action="action_bank_statement_wiz_open"
         sequence="25"
     />
 </odoo>
