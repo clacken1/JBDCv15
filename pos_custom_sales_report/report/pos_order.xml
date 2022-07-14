@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+        <record id="paperformat_landscape_details" model="report.paperformat">
+            <field name="name">European A4 Landscape</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">10</field>
+            <field name="dpi">90</field>
+        </record>
+
+
+        <record id="action_print_order_multi_details" model="ir.actions.report">
+                <field name="name">POS Order Report</field>
+                <field name="model">reportprint_pos_multi_order_report.pos_custom_sales_report.print_pos_multi_order_report</field>
+                <field name="report_type">qweb-pdf</field>
+                <field name="report_name">pos_custom_sales_report.print_pos_multi_order_report</field>
+                <field name="paperformat_id" ref="pos_custom_sales_report.paperformat_landscape_details"/>
+        </record>
+
+</odoo>
