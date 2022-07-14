@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+custom_report_stock_transfer.access_custom_stock_transfer_report,access_custom_stock_transfer_report,custom_report_stock_transfer.model_custom_stock_transfer_report,base.group_user,1,1,1,1
