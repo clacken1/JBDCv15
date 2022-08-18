@@ -37,7 +37,7 @@
                                 </tr>
                                 <tr>
                                     <td style="border:1px solid black"   class="text-center" colspan="7"><b>Total</b></td>
-                                    <td style="border:1px solid black"  class="text-right"> <b><span t-esc="total_amount_total" t-options='{"widget": "monetary", "display_currency": l.company_id.currency_id}'/></b></td>
+                                    <td style="border:1px solid black"  class="text-right"> <b><span t-esc="total_amount_total"/></b></td>
                                 </tr>
                             </table>
                         </div>
