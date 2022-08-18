@@ -7,7 +7,7 @@
                     <div class="page">
                         <div class="text-left container">
                              <!-- style="border: 1px solid black;" -->
-                            <h4>AR Report</h4>
+                            <h4>AP Report</h4>
                             <h6>Date: <t t-esc="start_dt"/> - <t t-esc="end_dt"/></h6><br/>
                         </div>
                         <div class="container" style="font-size: 10px;">
@@ -41,7 +41,7 @@
                                     <t t-else="">
                                         <td style="border:1px solid black"   class="text-center" colspan="6"><b>Total</b></td>
                                     </t>
-                                    <td style="border:1px solid black"  class="text-right"> <b><span t-esc="total_amount_total" t-options='{"widget": "monetary", "display_currency": l.currency_id}'/></b></td>
+                                    <td style="border:1px solid black"  class="text-right"> <b><span t-esc="total_amount_total"/></b></td>
                                 </tr>
                             </table>
                         </div>
