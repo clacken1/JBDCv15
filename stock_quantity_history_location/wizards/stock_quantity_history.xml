@@ -8,12 +8,13 @@
         <field name="arch" type="xml">
             <field name="inventory_datetime" position="before">
                 <field
-                    name="location_id"
+                    name="location_ids"
                     invisible="context.get('active_model') == 'stock.valuation.layer'"
+                    widget = "many2many_tags"
                 />
                 <field
                     name="include_child_locations"
-                    attrs="{'invisible': [('location_id', '=', False)]}"
+                    attrs="{'invisible': [('location_ids', '=', False)]}"
                 />
             </field>
         </field>
