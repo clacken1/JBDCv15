@@ -65,7 +65,7 @@
             <field name="name">account.move.customer.invoice.ap.form</field>
             <field name="model">account.move.customer.invoice.ap</field>
             <field name="arch" type="xml">
-                <form string="Customer Invoice: AP Report">
+                <form string="Customer Invoice: AR Report">
                     <group col="4">
                         <field name="start_dt"/>
                         <field name="end_dt"/>
@@ -80,7 +80,7 @@
         </record>  
 
         <record id="action_report_customer_invoice_ap" model="ir.actions.act_window">
-            <field name="name">Customer Invoice: AP Report</field>
+            <field name="name">Customer Invoice: AR Report</field>
             <field name="res_model">account.move.customer.invoice.ap</field>
             <field name="view_mode">form</field>
             <field name="context">{'default_report_type': 'customer'}</field>
@@ -97,7 +97,7 @@
 
         <menuitem id="account_reports_ap_menu" name="AP Reports" parent="account.menu_finance_reports" sequence="2"/>
 
-        <menuitem id="menu_customer_invoice_ap" name="Customer Invoice: AP Report" action="action_report_customer_invoice_ap" parent="account_reports_ap_menu" sequence="1"/>
+        <menuitem id="menu_customer_invoice_ap" name="Customer Invoice: AR Report" action="action_report_customer_invoice_ap" parent="account_reports_ap_menu" sequence="1"/>
         <menuitem id="menu_vendor_bills_ap" name="Vendor Bill: AP Report" action="action_report_vendor_bills_ap" parent="account_reports_ap_menu" sequence="1"/>
 
 

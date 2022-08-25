@@ -22,19 +22,42 @@
                                     <th style="border:1px solid black"  width="9%" class="text-center">Total</th>
                                 </tr>
                                 <t t-set="total_amount_total" t-value="0"/>
-                                <tr t-foreach="docs" t-as="l">
-                                    <t t-set="total_amount_total" t-value="total_amount_total + (l.qty_done * l.product_id.standard_price)"/>
+                                <t t-set="previos_record" t-value=""/>
+                                <t t-set="group_total_standard_price" t-value="0"/>
+                                <t t-set="group_total_qty_done" t-value="0"/>
+                                <t t-set="group_total_amount_total" t-value="0"/>
+                                <t t-foreach="docs" t-as="l">
                                     <t t-set="amount_total" t-value="l.qty_done * l.product_id.standard_price"/>
-                                    
-                                    <td style="border:1px solid black" ><span t-field="l.picking_id.date_done"/></td>
-                                    <td style="border:1px solid black" ><span t-field="l.picking_id.name"/></td>
-                                    <td style="border:1px solid black" ><span t-field="l.picking_id.location_id.display_name"/></td>
-                                    <td style="border:1px solid black" ><span t-field="l.picking_id.location_dest_id.display_name"/></td>
-                                    <td style="border:1px solid black" ><span t-field="l.product_id.name"/></td>
-                                    <td style="border:1px solid black"  class="text-right"><span t-field="l.product_id.standard_price" t-options='{"widget": "monetary", "display_currency": l.company_id.currency_id}'/></td>
-                                    <td style="border:1px solid black"  class="text-right"><span t-field="l.qty_done"/></td>
-                                    <td  style="border:1px solid black" class="text-right"><span t-esc="amount_total" t-options='{"widget": "monetary", "display_currency": l.company_id.currency_id}'/></td>
-                                </tr>
+                                    <t t-if="previos_record and previos_record != l.picking_id.name">
+                                        <tr>
+                                            <td style="border:1px solid black;padding-right:10px;" class="text-right" colspan="5"> <b>Total : <span t-esc="previos_record"/> </b></td>
+                                            <td style="border:1px solid black" class="text-right"><t t-esc="group_total_standard_price" t-options='{"widget": "monetary", "display_currency": l.company_id.currency_id}'/></td>
+                                            <td style="border:1px solid black" class="text-right"><t t-esc="group_total_qty_done"/></td>
+                                            <td style="border:1px solid black" class="text-right"><t t-esc="group_total_amount_total" t-options='{"widget": "monetary", "display_currency": l.company_id.currency_id}'/></td>
+                                            <t t-set="group_total_standard_price" t-value="l.product_id.standard_price"/>
+                                            <t t-set="group_total_qty_done" t-value="l.qty_done"/>
+                                            <t t-set="group_total_amount_total" t-value="amount_total"/>
+                                        </tr>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="group_total_standard_price" t-value="group_total_standard_price + l.product_id.standard_price"/>
+                                        <t t-set="group_total_qty_done" t-value="group_total_qty_done + l.qty_done"/>
+                                        <t t-set="group_total_amount_total" t-value="group_total_amount_total + amount_total"/>
+                                    </t>
+                                    <tr>
+                                        <t t-set="total_amount_total" t-value="total_amount_total + (l.qty_done * l.product_id.standard_price)"/>
+                                        
+                                        <td style="border:1px solid black" ><span t-field="l.picking_id.date_done"/></td>
+                                        <td style="border:1px solid black" ><span t-field="l.picking_id.name"/></td>
+                                        <td style="border:1px solid black" ><span t-field="l.picking_id.location_id.display_name"/></td>
+                                        <td style="border:1px solid black" ><span t-field="l.picking_id.location_dest_id.display_name"/></td>
+                                        <td style="border:1px solid black" ><span t-field="l.product_id.name"/></td>
+                                        <td style="border:1px solid black"  class="text-right"><span t-field="l.product_id.standard_price" t-options='{"widget": "monetary", "display_currency": l.company_id.currency_id}'/></td>
+                                        <td style="border:1px solid black"  class="text-right"><span t-field="l.qty_done"/></td>
+                                        <td  style="border:1px solid black" class="text-right"><span t-esc="amount_total" t-options='{"widget": "monetary", "display_currency": l.company_id.currency_id}'/></td>
+                                    </tr>
+                                    <t t-set="previos_record" t-value="l.picking_id.name"/>
+                                </t>
                                 <tr>
                                     <td style="border:1px solid black"   class="text-center" colspan="7"><b>Total</b></td>
                                     <td style="border:1px solid black"  class="text-right"> <b><span t-esc="total_amount_total"/></b></td>
