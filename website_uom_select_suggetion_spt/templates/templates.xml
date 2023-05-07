@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="kits_multi_uom_product" inherit_id="website_sale.product">
+        <xpath expr="//form//div[hasclass('css_quantity')]" position="after">
+            <t t-if="product.type != 'service'">
+                <div class="uom_measure" style="margin-top: 8px;width: 50%">
+                    <div class="mb-1 form-group">
+                        <div class="input-icon">
+                            <select class="form-control js_uom_change" name="uom_id" id="uom_id">
+                                <t t-foreach="product.product_uom_ids" t-as="uom">
+                                    <option t-att-data-uom_id="uom.id" t-att-value="uom.id">
+                                        <t t-esc="uom.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="kits_multi_uom_cart_lines" inherit_id="website_sale.cart_lines">
+        <xpath expr="//thead//th[hasclass('td-qty')]" position="after">
+            <th class="text-center">UOM</th>
+        </xpath>
+        <xpath expr="//tbody//td[hasclass('td-qty')]" position="after">
+            <td class="text-center">
+                <t t-if="line.product_id.type != 'service'">
+                    <span t-field="line.product_uom.name"/>
+                </t>
+                <t t-else="">
+                    <span>-</span>
+                </t>
+
+                <!-- <t t-esc="line.product_uom_qty"/> -->
+            </td>
+        </xpath>
+        <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">
+            <attribute name="t-att-data-max">(line.product_uom._compute_quantity(line.product_uom_qty,line.product_id.uom_id)+(line.product_id.free_qty - line.product_id.cart_qty)) if line.product_id.type == 'product' else 0</attribute>
+        </xpath>
+    </template>
+
+    <template id="kits_multi_uom_product_price" inherit_id="website_sale.product_price">
+        <xpath expr="//h3[hasclass('css_editable_mode_hidden')]/span[hasclass('oe_price')]" position="after">
+            <t t-if="product.type != 'service'">
+                <span>/</span>
+                <span id="uom_name" style="white-space: nowrap;">
+                    <t t-esc="product.product_uom_ids[0].name"/>
+                </span>
+            </t>
+        </xpath>
+    </template>
+</odoo>
