@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_ap_customer_invoice_server" model="ir.actions.server">
+            <field name="name">AP: Customer Invoice</field>
+            <field name="model_id" ref="account.model_account_account"/>
+            <field name="binding_model_id" ref="account.model_account_account"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.ap_customer_invoice()
+            </field>
+        </record>
+
+        <record id="action_ap_vendor_bills_server" model="ir.actions.server">
+            <field name="name">AP: Vendor Bills</field>
+            <field name="model_id" ref="account.model_account_account"/>
+            <field name="binding_model_id" ref="account.model_account_account"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.ap_customer_invoice()
+            </field>
+        </record>
+
+    </data>
+</odoo>

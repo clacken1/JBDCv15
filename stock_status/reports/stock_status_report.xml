@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_template_stock_status_report">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br/>
+                    <center><h2>Stock Status Report</h2></center><br/>
+                    <div style="width:100%;margin-bottom:10px;" t-if="env.context.get('from_dt') and env.context.get('to_dt')">
+                        <div style="width:48%;float:left;">
+                            <strong>From: </strong> <t t-esc="env.context.get('from_dt')"/>
+                        </div>
+                        <div style="width:48%;float:right;">
+                            <strong>To: </strong> <t t-esc="env.context.get('to_dt')"/>
+                        </div>
+                        <div style="clear:both;"/>
+                    </div>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th><strong>Item #</strong></th>
+                                <th><strong>Description</strong></th>
+                                <th><strong>Category</strong></th>
+                                <th><strong>Vendor #</strong></th>
+                                <th><strong>Cost</strong></th>
+                                <th><strong>Qty on hand</strong></th>
+                                <th><strong>Available Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="grand_total_qty_on_hand" t-value="0"/>
+                            <t t-set="grand_total_qty_available" t-value="0"/>
+
+                            <t t-foreach="env.context.get('report_data').get('key_list')" t-as="key">
+                                <t t-if="key != 'undefined'">
+                                    <t t-set="counter" t-value="0"/>
+                                    <t t-foreach="env.context.get('report_data').get('vals_list')" t-as="line">
+                                        <t t-if="line[0] == key">
+                                            <t t-set="counter" t-value="counter + 1"/>
+                                        </t>
+                                    </t>
+
+                                    <tr t-if="counter > 0">
+                                        <td colspan="2"><strong>Vendor- <t t-esc="key.split('_', 1)[0]"/></strong></td>
+                                        <td colspan="2"><strong>Name: <t t-if="len(key.split('_', 1)) > 1" t-esc="key.split('_', 1)[1]"/></strong></td>
+                                        <td colspan="3"></td>
+                                    </tr>
+
+                                    <t t-set="total_qty_on_hand" t-value="0"/>
+                                    <t t-set="total_qty_available" t-value="0"/>
+
+                                    <t t-if="counter > 0" t-foreach="env.context.get('report_data').get('vals_list')" t-as="line">
+                                        <t t-if="line[0] == key">
+                                            <tr>
+                                                <td> <t t-esc="line[1]"/> </td>
+                                                <td> <t t-esc="line[2]"/> </td>
+                                                <td> <t t-esc="line[3]"/> </td>
+                                                <td> <t t-esc="line[4]"/> </td>
+                                                <td> <t t-esc="line[5]"/> </td>
+                                                <td> <t t-esc="line[6]"/> </td>
+                                                <td> <t t-esc="line[7]"/> </td>
+
+                                                <t t-set="total_qty_on_hand" t-value="total_qty_on_hand + line[9]"/>
+                                                <t t-set="total_qty_available" t-value="total_qty_available + line[10]"/>
+
+                                                <t t-set="grand_total_qty_on_hand" t-value="grand_total_qty_on_hand + line[9]"/>
+                                                <t t-set="grand_total_qty_available" t-value="grand_total_qty_available + line[10]"/>
+                                            </tr>
+    				                	</t>
+                                    </t>
+
+                                    <tr t-if="counter > 0">
+                                        <td></td>
+                                        <td></td>
+                                        <td><strong>Total for Vendor</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><strong><t t-esc="'{:,.2f}'.format(total_qty_on_hand)"/></strong></td>
+                                        <td><strong><t t-esc="'{:,.2f}'.format(total_qty_available)"/></strong></td>
+                                    </tr>
+
+                                </t>
+                            </t>
+
+                            <t t-set="counter1" t-value="0"/>
+                            <t t-foreach="env.context.get('report_data').get('vals_list')" t-as="line">
+                                <t t-if="line[0] == 'undefined'">
+                                    <t t-set="counter1" t-value="counter1 + 1"/>
+                                </t>
+                            </t>
+
+                            <t t-if="counter1 > 0">
+                                <tr>
+                                    <td colspan="7"><strong>Products with "No Vendor# and No Vendor name defined"</strong></td>
+                                </tr>
+                            </t>
+
+                            <t t-set="total_qty_on_hand1" t-value="0"/>
+                            <t t-set="total_qty_available1" t-value="0"/>
+
+                            <t t-foreach="env.context.get('report_data').get('key_list')" t-as="key">
+                                <t t-if="key == 'undefined'">
+                                    <t t-foreach="env.context.get('report_data').get('vals_list')" t-as="line">
+                                        <t t-if="line[0] == key">
+                                            <tr>
+                                                <td> <t t-esc="line[1]"/> </td>
+                                                <td> <t t-esc="line[2]"/> </td>
+                                                <td> <t t-esc="line[3]"/> </td>
+                                                <td> <t t-esc="line[4]"/> </td>
+                                                <td> <t t-esc="line[5]"/> </td>
+                                                <td> <t t-esc="line[6]"/> </td>
+                                                <td> <t t-esc="line[7]"/> </td>
+
+                                                <t t-set="total_qty_on_hand1" t-value="total_qty_on_hand1 + line[9]"/>
+                                                <t t-set="total_qty_available1" t-value="total_qty_available1 + line[10]"/>
+
+                                                <t t-set="grand_total_qty_on_hand" t-value="grand_total_qty_on_hand + line[9]"/>
+                                                <t t-set="grand_total_qty_available" t-value="grand_total_qty_available + line[10]"/>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </t>
+                            </t>
+
+                            <tr t-if="counter1 > 0">
+                                <td></td>
+                                <td></td>
+                                <td><strong>Total</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong><t t-esc="'{:,.2f}'.format(total_qty_on_hand1)"/></strong></td>
+                                <td><strong><t t-esc="'{:,.2f}'.format(total_qty_available1)"/></strong></td>
+                            </tr>
+
+                            <tr rowspan='2'>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Grand Total</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong><t t-esc="'{:,.2f}'.format(grand_total_qty_on_hand)"/></strong></td>
+                                <td><strong><t t-esc="'{:,.2f}'.format(grand_total_qty_available)"/></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_stock_status_report">
+		    <t t-call="web.html_container">
+		        <t t-foreach="docs" t-as="doc">
+		            <t t-call="stock_status.report_template_stock_status_report"/>
+		        </t>
+		    </t>
+		</template>
+
+		<record id="action_report_stock_status_report" model="ir.actions.report">
+            <field name="name">Stock Status Report</field>
+            <field name="model">stock.quant</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock_status.report_stock_status_report</field>
+            <field name="report_file">stock_status.report_stock_status_report</field>
+            <field name="print_report_name">'Stock Status Report'</field>
+            <field name="binding_type">report</field>
+        </record>
+	</data>
+</odoo>

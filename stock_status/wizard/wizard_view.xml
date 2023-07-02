@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_status_wiz_view_form" model="ir.ui.view">
+        <field name="name">stock.status.wiz.view.form</field>
+        <field name="model">stock.status.wiz</field>
+        <field name="arch" type="xml">
+            <form>
+                <group attrs="{'invisible': [('state', '=', True)]}">
+                    <group>
+                        <field name="start_dt" required='1'/>
+                        <field name="end_dt" required='1'/>
+                        <field name="all_product"/>
+                        <field name="product_ids" widget="many2many_tags" attrs="{'invisible': [('all_product', '!=', False)], 'required': [('all_product', '=', False)]}"/>
+                    </group>
+                </group>
+                <group attrs="{'invisible': [('state', '=', False)]}">
+                    <field name="file" filename='filenm' readonly='1'/>
+                    <field name="filenm" invisible='1'/>
+                    <field name="state" invisible='1'/>
+                </group>
+                <footer>
+                    <button attrs="{'invisible': [('state', '=', True)]}" name="print_pdf" string="Print PDF" type="object" class="btn-primary"/>
+                    <button attrs="{'invisible': [('state', '=', True)]}" name="print_xls" string="Print XLS" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_stock_status_report_wiz" model="ir.actions.act_window">
+        <field name="name">Stock Status Report</field>
+        <field name="res_model">stock.status.wiz</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_stock_status_report_wiz"
+        parent="stock.menu_warehouse_report"
+        action="action_stock_status_report_wiz"
+    />
+</odoo>

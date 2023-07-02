@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+custom_report_ap_ar.access_account_move_customer_invoice_ap,access_account_move_customer_invoice_ap,custom_report_ap_ar.model_account_move_customer_invoice_ap,base.group_user,1,1,1,1

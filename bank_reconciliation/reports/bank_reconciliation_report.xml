@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_template_bank_reconciliation_report">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br/>
+                    <h4 style='text-align:left;'>BANK RECONCILIATION FOR THE PERIOD: <strong><span t-field="doc.date_from"/> - <span t-field="doc.date_to"/></strong></h4><br/>
+
+                    <table class="table table-sm">
+                        <tr>
+                            <td><strong>Beginning GL Balance</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Add Payments:</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Less Charges:</strong></td>
+                            <td></td>
+                        </tr>
+
+                        <tr rowspan="2">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Ending GL Balance</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ending Statement Balance</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Less payments not debited by bank</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Add payments not credited by bank</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Unreconciled Difference</strong></td>
+                            <td></td>
+                        </tr>
+
+                        <tr rowspan="2">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Outstanding Receipts:</strong></td>
+                            <td></td>
+                        </tr>
+
+                        <tr rowspan="2">
+                            <td>&#160;</td>
+                            <td>&#160;</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Outstanding Payments:</strong></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_bank_reconciliation_report">
+		    <t t-call="web.html_container">
+		        <t t-foreach="docs" t-as="doc">
+		            <t t-call="bank_reconciliation.report_template_bank_reconciliation_report"/>
+		        </t>
+		    </t>
+		</template>
+
+		<record id="action_report_bank_reconciliation_report" model="ir.actions.report">
+            <field name="name">Bank Reconciliation Report</field>
+            <field name="model">bank.statement</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">bank_reconciliation.report_bank_reconciliation_report</field>
+            <field name="report_file">bank_reconciliation.report_bank_reconciliation_report</field>
+            <field name="print_report_name">'Bank Reconciliation Report'</field>
+            <field name="binding_model_id" ref="bank_reconciliation.model_bank_statement"/>
+            <field name="binding_type">report</field>
+        </record>
+	</data>
+</odoo>

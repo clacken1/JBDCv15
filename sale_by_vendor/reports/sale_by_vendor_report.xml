@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<template id="report_template_sale_by_vendor_report">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br/>
+                    <center><h2>Sale By Vendor Report</h2></center><br/>
+                    <div style="width:100%;margin-bottom:10px;" t-if="env.context.get('from_dt') and env.context.get('to_dt')">
+                        <div style="width:48%;float:left;">
+                            <strong>From: </strong> <t t-esc="env.context.get('from_dt')"/>
+                        </div>
+                        <div style="width:48%;float:right;">
+                            <strong>To: </strong> <t t-esc="env.context.get('to_dt')"/>
+                        </div>
+                        <div style="clear:both;"/>
+                    </div>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th><strong>Vendor</strong></th>
+                                <th><strong>Amount</strong></th>
+                                <th><strong>% of Total</strong></th>
+                                <th><strong>Quantity</strong></th>
+                                <th><strong>Sales</strong></th>
+                                <th><strong>% of Total</strong></th>
+                                <th><strong>Gross Profit</strong></th>
+                                <th><strong>% of Total</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="env.context.get('report_data').get('lines')" t-as="line">
+                                <tr>
+                                    <td><t t-esc="line[0]"/></td>
+                                    <td><t t-esc="line[1]"/></td>
+                                    <td><t t-esc="line[2]"/>%</td>
+                                    <td><t t-esc="line[3]"/></td>
+                                    <td><t t-esc="line[4]"/></td>
+                                    <td><t t-esc="line[5]"/>%</td>
+                                    <td><t t-esc="line[6]"/></td>
+                                    <td><t t-esc="line[7]"/>%</td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td>Grand Totals:</td>
+                                <td><t t-esc="env.context.get('report_data').get('total_amount')"/> items</td>
+                                <td></td>
+                                <td><t t-esc="env.context.get('report_data').get('total_qty')"/></td>
+                                <td><t t-esc="env.context.get('report_data').get('total_sales')"/></td>
+                                <td></td>
+                                <td><t t-esc="env.context.get('report_data').get('total_gross_profit')"/></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_sale_by_vendor_report">
+		    <t t-call="web.html_container">
+		        <t t-foreach="docs" t-as="doc">
+		            <t t-call="sale_by_vendor.report_template_sale_by_vendor_report"/>
+		        </t>
+		    </t>
+		</template>
+
+		<record id="action_report_sale_by_vendor_report" model="ir.actions.report">
+            <field name="name">Sale By Vendor Report</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sale_by_vendor.report_sale_by_vendor_report</field>
+            <field name="report_file">sale_by_vendor.report_sale_by_vendor_report</field>
+            <field name="print_report_name">'Sale By Vendor Report'</field>
+            <field name="binding_type">report</field>
+        </record>
+	</data>
+</odoo>

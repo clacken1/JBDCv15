@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!-- POS Sales Summary Report  -->
+	<report 
+		string="Sales Summary" 
+		id="action_sales_summary_report" 
+		model="all.sale.summary.wizard" 
+		report_type="qweb-pdf"
+		name="all_in_one_report.report_sales_summary" 
+		file="all_in_one_report.report_sales_summary" 
+	/>
+
+	<record id="view_pos_sale_summary_wizard" model="ir.ui.view">
+		<field name="name">all.sale.summary.wizard.form</field>
+		<field name="model">all.sale.summary.wizard</field>
+		<field name="arch" type="xml">
+			<form string="Sales Summary">
+				<group>
+					<field name="report_type" />
+				</group>
+				<group col="4">
+					<field name="start_dt"/>
+					<field name="end_dt"/>
+				</group>
+				<group>
+					<field name="categ_ids" widget="many2many_tags"/>
+					<field name="product_ids" widget="many2many_tags"/>
+				</group>
+				<footer>
+					<button name="sale_summary_generate_report" string="Print" type="object" class="btn-primary"/>
+					<button string="Cancel" class="btn-default" special="cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>  
+
+	<record id="action_report_sale_summary" model="ir.actions.act_window">
+		<field name="name">Sales Summary</field>
+		<field name="res_model">all.sale.summary.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+	</record>
+
+	<menuitem id="menu_report_sale_summary" name="Sales Summary" action="action_report_sale_summary" parent="sale.menu_sale_report" sequence="1"/>
+
+
+
+
+	<!--Consignment Report  -->
+	<report 
+		string="Consignment Report" 
+		id="action_consignment_summary_report" 
+		model="all.consignment.summary.wizard" 
+		report_type="qweb-pdf"
+		name="all_in_one_report.report_consignment_summary" 
+		file="all_in_one_report.report_consignment_summary" 
+	/>
+
+	<record id="view_consignment_wizard_con" model="ir.ui.view">
+		<field name="name">all.consignment.summary.wizard.form</field>
+		<field name="model">all.consignment.summary.wizard</field>
+		<field name="arch" type="xml">
+			<form string="Consignment Summary">
+				<group col="4">
+					<field name="start_dt"/>
+					<field name="end_dt"/>
+				</group>
+				<group col="4">
+					<field name="purchase"/>
+					<field name="sales"/>
+				</group>
+				<group col="4">
+					<field name="owner_ids" widget="many2many_tags"/>
+					<field name="product_ids" widget="many2many_tags"/>
+				</group>
+				<footer>
+					<button name="consignment_summary_generate_report" string="Print" type="object" class="btn-primary"/>
+					<button string="Cancel" class="btn-default" special="cancel" />
+				</footer>
+			</form>
+		</field>
+	</record>  
+
+	<record id="action_report_consignment_summary" model="ir.actions.act_window">
+		<field name="name">Consignment Report</field>
+		<field name="res_model">all.consignment.summary.wizard</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+	</record>
+
+	<menuitem id="menu_report_consignment_summary" name="Consignment Report" action="action_report_consignment_summary" parent="stock.menu_warehouse_report"/>
+
+</odoo>
+

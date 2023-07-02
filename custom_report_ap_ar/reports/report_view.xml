@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <template id="report_ap_customer_invoice_document">
+		    <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-left container">
+                             <!-- style="border: 1px solid black;" -->
+                            <h4>AP Report</h4>
+                            <h6>Date: <t t-esc="start_dt"/> - <t t-esc="end_dt"/></h6><br/>
+                        </div>
+                        <div class="container" style="font-size: 10px;">
+                            <table width="100%">
+                                <tr style="margin:5px;padding:4px;">
+                                    <th style="border:1px solid black" width="15%" class="text-center">Number</th>
+                                    <th style="border:1px solid black"  t-if="report_type == 'vendor'" width="10%" class="text-center">P.O#</th>
+                                    <th style="border:1px solid black"  width="15%" class="text-center">Partner#</th>
+                                    <th style="border:1px solid black"  width="12%" class="text-center">Invoice Date</th>
+                                    <th style="border:1px solid black"  width="12%" class="text-center">Due Date</th>
+                                    <th style="border:1px solid black"  width="12%" class="text-center">Untaxed Amount</th>
+                                    <th style="border:1px solid black"  width="12%" class="text-center">Tax</th>
+                                    <th style="border:1px solid black"  width="12%" class="text-center">Total</th>
+                                </tr>
+                                <t t-set="total_amount_total" t-value="0"/>
+                                <tr t-foreach="docs" t-as="l">
+                                    <t t-set="total_amount_total" t-value="total_amount_total + l.amount_total"/>
+                                    <td style="border:1px solid black" ><span t-field="l.name"/></td>
+                                    <td style="border:1px solid black"  t-if="report_type == 'vendor'"><span t-field="l.ref"/></td>
+                                    <td style="border:1px solid black" ><span t-field="l.partner_id.name"/></td>
+                                    <td style="border:1px solid black" ><span t-field="l.invoice_date"/></td>
+                                    <td style="border:1px solid black" ><span t-field="l.invoice_date_due"/></td>
+                                    <td style="border:1px solid black"  class="text-right"><span t-field="l.amount_untaxed" t-options='{"widget": "monetary", "display_currency": l.currency_id}'/></td>
+                                    <td style="border:1px solid black"  class="text-right"><span t-field="l.amount_tax" t-options='{"widget": "monetary", "display_currency": l.currency_id}'/></td>
+                                    <td  style="border:1px solid black" class="text-right"><span t-field="l.amount_total" t-options='{"widget": "monetary", "display_currency": l.currency_id}'/></td>
+                                </tr>
+                                <tr>
+                                    <t t-if="report_type == 'vendor'">
+                                        <td style="border:1px solid black"   class="text-center" colspan="7"><b>Total</b></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="border:1px solid black"   class="text-center" colspan="6"><b>Total</b></td>
+                                    </t>
+                                    <td style="border:1px solid black"  class="text-right"> <b><span t-esc="total_amount_total"/></b></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+		    </t>
+		</template>
+
+		<record id="action_ap_customer_invoice_report" model="ir.actions.report">
+            <field name="name">AP Report</field>
+            <field name="model">account.move.customer.invoice.ap</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">custom_report_ap_ar.report_ap_customer_invoice_document</field>
+            <field name="report_file">custom_report_ap_ar.report_ap_customer_invoice_document</field>
+            <field name="print_report_name">'AP Report'</field>
+            <field name="binding_model_id" ref="custom_report_ap_ar.model_account_move_customer_invoice_ap"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="view_customer_invoice_ap_wizard" model="ir.ui.view">
+            <field name="name">account.move.customer.invoice.ap.form</field>
+            <field name="model">account.move.customer.invoice.ap</field>
+            <field name="arch" type="xml">
+                <form string="Customer Invoice: AR Report">
+                    <group col="4">
+                        <field name="start_dt"/>
+                        <field name="end_dt"/>
+                        <field name="report_type" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="generate_report" string="Print" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>  
+
+        <record id="action_report_customer_invoice_ap" model="ir.actions.act_window">
+            <field name="name">Customer Invoice: AR Report</field>
+            <field name="res_model">account.move.customer.invoice.ap</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_report_type': 'customer'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_report_vendor_bills_ap" model="ir.actions.act_window">
+            <field name="name">Vendor Bill: AP Report</field>
+            <field name="res_model">account.move.customer.invoice.ap</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_report_type': 'vendor'}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="account_reports_ap_menu" name="AP Reports" parent="account.menu_finance_reports" sequence="2"/>
+
+        <menuitem id="menu_customer_invoice_ap" name="Customer Invoice: AR Report" action="action_report_customer_invoice_ap" parent="account_reports_ap_menu" sequence="1"/>
+        <menuitem id="menu_vendor_bills_ap" name="Vendor Bill: AP Report" action="action_report_vendor_bills_ap" parent="account_reports_ap_menu" sequence="1"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--         <template id="report_ap_vendor_bills_document">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-left container">
+                            <h4>AR Report</h4>
+                            <h6>Date: <strong  t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/></h6><br/>
+                        </div>
+                        <div class="container" style="font-size: 10px;">
+                            <table class="table table-condensed" width="100%">
+                                <tr>
+                                    <th width="15%" class="text-center">Number</th>
+                                    <th width="10%" class="text-center">P.O#</th>
+                                    <th width="15%" class="text-center">Partner#</th>
+                                    <th width="12%" class="text-center">Invoice Date</th>
+                                    <th width="12%" class="text-center">Due Date</th>
+                                    <th width="12%" class="text-center">Untaxed Amount</th>
+                                    <th width="12%" class="text-center">Tax</th>
+                                    <th width="12%" class="text-center">Total</th>
+                                </tr>
+                                <t t-set="total_amount_total" t-value="0"/>
+                                <tr t-foreach="docs" t-as="l">
+                                    <t t-set="total_amount_total" t-value="total_amount_total + l.amount_total"/>
+                                    <td><span t-field="l.name"/></td>
+                                    <td ><span t-field="l.ref"/></td>
+                                    <td><span t-field="l.partner_id.name"/></td>
+                                    <td><span t-field="l.invoice_date"/></td>
+                                    <td><span t-field="l.invoice_date_due"/></td>
+                                    <td class="text-right"><span t-field="l.amount_untaxed" t-options='{"widget": "monetary", "display_currency": l.currency_id}'/></td>
+                                    <td class="text-right"><span t-field="l.amount_tax" t-options='{"widget": "monetary", "display_currency": l.currency_id}'/></td>
+                                    <td class="text-right"><span t-field="l.amount_total" t-options='{"widget": "monetary", "display_currency": l.currency_id}'/></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center" colspan="7"><b>Total</b></td>
+                                    <td class="text-right"> <b><span t-esc="total_amount_total" t-options='{"widget": "monetary", "display_currency": l.currency_id}'/></b></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_ap_vendor_bills_report" model="ir.actions.report">
+            <field name="name">AP : Vendor Bill</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">custom_report_ap_ar.report_ap_vendor_bills_document</field>
+            <field name="report_file">custom_report_ap_ar.report_ap_vendor_bills_document</field>
+            <field name="print_report_name">'AP : Vendor Bill'</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record> -->
+
+	</data>
+</odoo>
